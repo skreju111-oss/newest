@@ -1,0 +1,353 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; 
+    user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100dvh; 
+    overflow: hidden;
+    background: #111;
+    font-family: sans-serif;
+}
+
+#app {
+    position: relative;
+    width: 100vw;
+    height: 100dvh;
+    max-width: 412px;
+    max-height: 915px;
+    margin: auto;
+    overflow: hidden;
+    background: #000;
+}
+
+/* ------------------------ */
+/* FIRST PAGE & ASSETS      */
+/* ------------------------ */
+
+#page1 {
+    position: absolute;
+    inset: 0;
+    z-index: 1; 
+}
+
+#grid1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#page1txt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2; 
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 2s ease-in-out; 
+}
+
+#page2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 3; 
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out; 
+}
+
+#page2pic {
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 4; 
+    pointer-events: none;
+    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    transform-origin: center center;
+}
+
+/* ------------------------ */
+/* FADING PAGES             */
+/* ------------------------ */
+
+#page3, #page4, #page5, #page6, #page7, #page8, #page9, #page10,
+#page11, #page12, #page13, #page14, #page15, #page16, #page17, #page18, #page19,
+#page20, #page21, #page22, #page23, #page26 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out, left 1.5s cubic-bezier(.22, 1, .36, 1); 
+}
+
+/* Txts only up to 10 */
+#page3txt, #page5txt, #page6txt, #page7txt, #page8txt, #page9txt, #page10txt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 2s ease-in-out; 
+}
+
+/* ------------------------ */
+/* SLIDING PICTURES & ANIS  */
+/* ------------------------ */
+
+#page4pic, #page11pic, #page12pic, #page13pic, #page14pic, #page15pic, #page16pic, #page17pic, #page18pic, #page19pic,
+#page20pic, #page21pic, #page22pic, #ani1, #ani2, #ani4, #angy1, #ani5 {
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    transform-origin: center center;
+}
+
+/* Page 24 and Page 25 start off-screen RIGHT and slide left to 0 */
+#page24, #page25 {
+    position: absolute;
+    top: 0;
+    left: 100%; 
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+    opacity: 1; 
+    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+}
+
+/* ------------------------ */
+/* Z-INDEX STACKING         */
+/* ------------------------ */
+
+#page3 { z-index: 8; }
+#page3txt { z-index: 9; }
+#page4 { z-index: 10; }
+#page4pic { z-index: 11; }
+#page5 { z-index: 12; }
+#page5txt { z-index: 13; }
+#page6 { z-index: 14; }
+#page6txt { z-index: 15; }
+#page7 { z-index: 16; }
+#page7txt { z-index: 17; }
+#page8 { z-index: 18; }
+#page8txt { z-index: 19; }
+#page9 { z-index: 20; }
+#page9txt { z-index: 21; }
+#page10 { z-index: 22; }
+#page10txt { z-index: 23; }
+
+#page11 { z-index: 24; }
+#page11pic { z-index: 25; }
+#page12 { z-index: 26; }
+#page12pic { z-index: 27; }
+#page13 { z-index: 28; }
+#page13pic { z-index: 29; }
+#page14 { z-index: 30; }
+#page14pic { z-index: 31; }
+#page15 { z-index: 32; }
+#page15pic { z-index: 33; }
+#page16 { z-index: 34; }
+#page16pic { z-index: 35; }
+#page17 { z-index: 36; }
+#page17pic { z-index: 37; }
+#page18 { z-index: 38; }
+#page18pic { z-index: 39; }
+#page19 { z-index: 40; }
+#page19pic { z-index: 41; }
+#page20 { z-index: 42; }
+#page20pic { z-index: 43; }
+#page21 { z-index: 44; }
+#page21pic { z-index: 45; }
+#page22 { z-index: 46; }
+#page22pic { z-index: 47; }
+
+/* The Finale Layering */
+#page23 { z-index: 48; }
+#ani2   { z-index: 49; }
+#page24 { z-index: 50; } 
+#ani1   { z-index: 51; } 
+#ani4   { z-index: 52; } 
+#page25 { z-index: 53; } 
+#angy1  { z-index: 54; }
+#ani5   { z-index: 55; }
+#page26 { z-index: 56; }
+#angy-walker { z-index: 57; }
+
+/* Asset States */
+.writing { opacity: 1 !important; }
+.written { opacity: 1 !important; transition: none !important; }
+
+.show-page2, .show-page3, .show-page4, .show-page5, .show-page6, .show-page7, .show-page8, .show-page9, .show-page10,
+.show-page11, .show-page12, .show-page13, .show-page14, .show-page15, .show-page16, .show-page17, .show-page18, .show-page19,
+.show-page20, .show-page21, .show-page22, .show-page23, .show-page26 { opacity: 1 !important; }
+
+/* ------------------------ */
+/* RED COVER & LETTER       */
+/* ------------------------ */
+
+#cover {
+    position: absolute;
+    inset: 0;
+    z-index: 6; 
+    overflow: hidden;
+    pointer-events: none;
+    transition: opacity 1.5s ease; 
+}
+
+#grid2 {
+    position: absolute;
+    top: 0;
+    left: -75%;
+    height: 100%;
+    width: auto;
+    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+}
+
+#letter1 {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    width: auto;
+    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    z-index: 7; 
+    transform-origin: center center; 
+}
+
+/* ------------------------ */
+/* INVISIBLE TAP ZONES      */
+/* ------------------------ */
+
+#leftTap, #rightTap {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    z-index: 9999;
+    cursor: pointer;
+    background: transparent; 
+}
+
+#leftTap { left: 0; width: 25%; }
+#rightTap { right: 0; width: 25%; }
+
+#middleTap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    width: 150px;  
+    height: 150px; 
+    border-radius: 50%; 
+    z-index: 9999;
+    cursor: pointer;
+    background: transparent; 
+}
+
+/* ------------------------ */
+/* ANIMATIONS               */
+/* ------------------------ */
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    15% { transform: scale(1.03); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+.pulsing {
+    animation: heartbeat 1.5s infinite;
+}
+
+@keyframes pulseOnce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse-1s {
+    animation: pulseOnce 1s ease-in-out;
+}
+
+/* ------------------------ */
+/* STUTTER STOP MOTION      */
+/* ------------------------ */
+
+/* The wrapper slides exactly like ani1, page4pic, etc. */
+#angy-walker {
+    position: absolute;
+    top: 0;
+    left: -100%; /* Starts offscreen */
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    z-index: 57;
+}
+
+/* The images maintain full size and cover */
+#angy-walker img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 
+   Pattern Breakdown (0.6 seconds total to keep original fast speed):
+   0% to 25% (0 to 0.15s)   : angy4 is visible
+   25% to 50% (0.15 to 0.3s): angy6 is visible
+   50% to 100% (0.3 to 0.6s): angy4 is visible again (The Pause/Interval) 
+*/
+
+@keyframes stutterAngy4 {
+    0%, 24.9% { opacity: 1; }      /* Step 1 */
+    25%, 49.9% { opacity: 0; }     /* Hide for Step 2 */
+    50%, 100% { opacity: 1; }      /* Pause on this frame */
+}
+
+@keyframes stutterAngy6 {
+    0%, 24.9% { opacity: 0; }      /* Hidden during Step 1 */
+    25%, 49.9% { opacity: 1; }     /* Step 2 */
+    50%, 100% { opacity: 0; }      /* Hidden during Pause */
+}
+
+#angy4 {
+    /* 0.6s ensures the leg swapping is fast (0.15s per frame) */
+    animation: stutterAngy4 0.6s infinite;
+}
+
+#angy6 {
+    animation: stutterAngy6 0.6s infinite;
+}
