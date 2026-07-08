@@ -123,222 +123,96 @@ let picPulseTimer;
 let isWriting = false; 
 let letterStep = 1; 
 
-// --- AUDIO 1: CDK ---
-const cdk1 = new Audio('assets/cdk.mp3');
-const cdk2 = new Audio('assets/cdk.mp3');
-let activeCdk = cdk1;
-let inactiveCdk = cdk2;
-let cdkCrossfadeTriggered = false;
+// --- AUDIO SETUP ---
+// Setting loop to true automatically handles infinite playback flawlessly
+const cdk = new Audio('assets/cdk.mp3');
+cdk.loop = true;
 let isCdkPlaying = false;
-let cdkFadeInTimer; 
 
-function checkCdkCrossfade(e) {
-    const audio = e.target;
-    if (audio.duration && audio.currentTime >= audio.duration - 1 && !cdkCrossfadeTriggered) {
-        cdkCrossfadeTriggered = true;
-        inactiveCdk.currentTime = 0;
-        inactiveCdk.volume = 0;
-        inactiveCdk.play().catch(err => console.log(err));
-        
-        let steps = 0;
-        let fadeTimer = setInterval(() => {
-            steps++;
-            let progress = steps / 20; 
-            if (steps >= 20) {
-                clearInterval(fadeTimer);
-                activeCdk.pause();
-                activeCdk.volume = 0; 
-                inactiveCdk.volume = 1; 
-                let temp = activeCdk;
-                activeCdk = inactiveCdk;
-                inactiveCdk = temp;
-                cdkCrossfadeTriggered = false; 
-            } else {
-                activeCdk.volume = 1 - progress;
-                inactiveCdk.volume = progress;
-            }
-        }, 50); 
-    }
-}
-cdk1.addEventListener('timeupdate', checkCdkCrossfade);
-cdk2.addEventListener('timeupdate', checkCdkCrossfade);
-
-// --- AUDIO 2: ISHAREY ---
-const isharey1 = new Audio('assets/isharey.mp3');
-const isharey2 = new Audio('assets/isharey.mp3');
-let activeIsharey = isharey1;
-let inactiveIsharey = isharey2;
-let ishareyCrossfadeTriggered = false;
+const isharey = new Audio('assets/isharey.mp3');
+isharey.loop = true;
 let isIshareyPlaying = false;
-let ishareyFadeInTimer; 
 
-function checkIshareyCrossfade(e) {
-    const audio = e.target;
-    if (audio.duration && audio.currentTime >= audio.duration - 1 && !ishareyCrossfadeTriggered) {
-        ishareyCrossfadeTriggered = true;
-        inactiveIsharey.currentTime = 0;
-        inactiveIsharey.volume = 0;
-        inactiveIsharey.play().catch(err => console.log(err));
-        
-        let steps = 0;
-        let fadeTimer = setInterval(() => {
-            steps++;
-            let progress = steps / 20; 
-            if (steps >= 20) {
-                clearInterval(fadeTimer);
-                activeIsharey.pause();
-                activeIsharey.volume = 0; 
-                inactiveIsharey.volume = 1; 
-                let temp = activeIsharey;
-                activeIsharey = inactiveIsharey;
-                inactiveIsharey = temp;
-                ishareyCrossfadeTriggered = false; 
-            } else {
-                activeIsharey.volume = 1 - progress;
-                inactiveIsharey.volume = progress;
-            }
-        }, 50); 
-    }
-}
-isharey1.addEventListener('timeupdate', checkIshareyCrossfade);
-isharey2.addEventListener('timeupdate', checkIshareyCrossfade);
-
-// --- AUDIO 3: MAAFI ---
-const maafi1 = new Audio('assets/ani/maafi.mp3');
-const maafi2 = new Audio('assets/ani/maafi.mp3');
-let activeMaafi = maafi1;
-let inactiveMaafi = maafi2;
-let maafiCrossfadeTriggered = false;
+const maafi = new Audio('assets/ani/maafi.mp3');
+maafi.loop = true;
 let isMaafiPlaying = false;
-let maafiFadeInTimer;
 
-function checkMaafiCrossfade(e) {
-    const audio = e.target;
-    if (audio.duration && audio.currentTime >= audio.duration - 1 && !maafiCrossfadeTriggered) {
-        maafiCrossfadeTriggered = true;
-        inactiveMaafi.currentTime = 0;
-        inactiveMaafi.volume = 0;
-        inactiveMaafi.play().catch(err => console.log(err));
-        
-        let steps = 0;
-        let fadeTimer = setInterval(() => {
-            steps++;
-            let progress = steps / 20; 
-            if (steps >= 20) {
-                clearInterval(fadeTimer);
-                activeMaafi.pause();
-                activeMaafi.volume = 0; 
-                inactiveMaafi.volume = 1; 
-                let temp = activeMaafi;
-                activeMaafi = inactiveMaafi;
-                inactiveMaafi = temp;
-                maafiCrossfadeTriggered = false; 
-            } else {
-                activeMaafi.volume = 1 - progress;
-                inactiveMaafi.volume = progress;
-            }
-        }, 50); 
+// Helper functions for smooth fading between zones
+function fadeAudioIn(audio) {
+    if (audio.paused) {
+        audio.currentTime = 0;
     }
+    audio.volume = 0;
+    audio.play().catch(err => console.log("Tap needed", err));
+    
+    clearInterval(audio.fadeTimer);
+    let steps = 0;
+    audio.fadeTimer = setInterval(() => {
+        steps++;
+        if (steps >= 20) {
+            audio.volume = 1;
+            clearInterval(audio.fadeTimer);
+        } else {
+            audio.volume = steps / 20;
+        }
+    }, 50);
 }
-maafi1.addEventListener('timeupdate', checkMaafiCrossfade);
-maafi2.addEventListener('timeupdate', checkMaafiCrossfade);
+
+function fadeAudioOut(audio, stopFlagCallback) {
+    clearInterval(audio.fadeTimer);
+    let currentVol = audio.volume;
+    let steps = 20;
+    
+    audio.fadeTimer = setInterval(() => {
+        steps--;
+        if (steps <= 0) {
+            audio.volume = 0;
+            audio.pause();
+            clearInterval(audio.fadeTimer);
+            if (stopFlagCallback) stopFlagCallback();
+        } else {
+            audio.volume = Math.max(0, currentVol * (steps / 20));
+        }
+    }, 50);
+}
 
 // --- MASTER AUDIO CONTROLLER ---
 function updateMusic() {
+    // ZONE 1: Stages 3 to 19 (cdk.mp3)
     if (stage >= 3 && stage <= 19) {
-        if (isIshareyPlaying) {
-            clearInterval(ishareyFadeInTimer);
-            activeIsharey.pause();
-            inactiveIsharey.pause();
-            isIshareyPlaying = false;
-            ishareyCrossfadeTriggered = false;
-        }
-        if (isMaafiPlaying) {
-            clearInterval(maafiFadeInTimer);
-            activeMaafi.pause();
-            inactiveMaafi.pause();
-            isMaafiPlaying = false;
-            maafiCrossfadeTriggered = false;
-        }
+        if (isIshareyPlaying) fadeAudioOut(isharey, () => isIshareyPlaying = false);
+        if (isMaafiPlaying) fadeAudioOut(maafi, () => isMaafiPlaying = false);
+        
         if (!isCdkPlaying) {
-            activeCdk.currentTime = 0;
-            activeCdk.volume = 0; 
-            activeCdk.play().catch(err => console.log("Tap needed", err));
+            fadeAudioIn(cdk);
             isCdkPlaying = true;
-            clearInterval(cdkFadeInTimer);
-            let steps = 0; 
-            cdkFadeInTimer = setInterval(() => {
-                steps++;
-                let progress = steps / 100; 
-                if (steps >= 100) { clearInterval(cdkFadeInTimer); activeCdk.volume = 1; } 
-                else { activeCdk.volume = progress; }
-            }, 50);
         }
     } 
+    // ZONE 2: Stages 20 to 46 (isharey.mp3)
     else if (stage >= 20 && stage <= 46) {
-        if (isCdkPlaying) {
-            clearInterval(cdkFadeInTimer);
-            activeCdk.pause();
-            inactiveCdk.pause();
-            isCdkPlaying = false;
-            cdkCrossfadeTriggered = false;
-        }
-        if (isMaafiPlaying) {
-            clearInterval(maafiFadeInTimer);
-            activeMaafi.pause();
-            inactiveMaafi.pause();
-            isMaafiPlaying = false;
-            maafiCrossfadeTriggered = false;
-        }
+        if (isCdkPlaying) fadeAudioOut(cdk, () => isCdkPlaying = false);
+        if (isMaafiPlaying) fadeAudioOut(maafi, () => isMaafiPlaying = false);
+        
         if (!isIshareyPlaying) {
-            activeIsharey.currentTime = 0;
-            activeIsharey.volume = 0; 
-            activeIsharey.play().catch(err => console.log("Tap needed", err));
+            fadeAudioIn(isharey);
             isIshareyPlaying = true;
-            clearInterval(ishareyFadeInTimer);
-            let steps = 0; 
-            ishareyFadeInTimer = setInterval(() => {
-                steps++;
-                let progress = steps / 100; 
-                if (steps >= 100) { clearInterval(ishareyFadeInTimer); activeIsharey.volume = 1; } 
-                else { activeIsharey.volume = progress; }
-            }, 50);
         }
     } 
+    // ZONE 3: Stage 47+ (maafi.mp3)
     else if (stage >= 47) {
-        if (isCdkPlaying) {
-            clearInterval(cdkFadeInTimer);
-            activeCdk.pause();
-            inactiveCdk.pause();
-            isCdkPlaying = false;
-            cdkCrossfadeTriggered = false;
-        }
-        if (isIshareyPlaying) {
-            clearInterval(ishareyFadeInTimer);
-            activeIsharey.pause();
-            inactiveIsharey.pause();
-            isIshareyPlaying = false;
-            ishareyCrossfadeTriggered = false;
-        }
+        if (isCdkPlaying) fadeAudioOut(cdk, () => isCdkPlaying = false);
+        if (isIshareyPlaying) fadeAudioOut(isharey, () => isIshareyPlaying = false);
+        
         if (!isMaafiPlaying) {
-            activeMaafi.currentTime = 0;
-            activeMaafi.volume = 0; 
-            activeMaafi.play().catch(err => console.log("Tap needed", err));
+            fadeAudioIn(maafi);
             isMaafiPlaying = true;
-            clearInterval(maafiFadeInTimer);
-            let steps = 0; 
-            maafiFadeInTimer = setInterval(() => {
-                steps++;
-                let progress = steps / 100; 
-                if (steps >= 100) { clearInterval(maafiFadeInTimer); activeMaafi.volume = 1; } 
-                else { activeMaafi.volume = progress; }
-            }, 50);
         }
     }
+    // DEFAULT: Stop everything (Stages 0-2)
     else {
-        if (isCdkPlaying) { clearInterval(cdkFadeInTimer); activeCdk.pause(); inactiveCdk.pause(); isCdkPlaying = false; cdkCrossfadeTriggered = false; }
-        if (isIshareyPlaying) { clearInterval(ishareyFadeInTimer); activeIsharey.pause(); inactiveIsharey.pause(); isIshareyPlaying = false; ishareyCrossfadeTriggered = false; }
-        if (isMaafiPlaying) { clearInterval(maafiFadeInTimer); activeMaafi.pause(); inactiveMaafi.pause(); isMaafiPlaying = false; maafiCrossfadeTriggered = false; }
+        if (isCdkPlaying) fadeAudioOut(cdk, () => isCdkPlaying = false);
+        if (isIshareyPlaying) fadeAudioOut(isharey, () => isIshareyPlaying = false);
+        if (isMaafiPlaying) fadeAudioOut(maafi, () => isMaafiPlaying = false);
     }
 }
 // -------------------------------------

@@ -553,3 +553,9 @@ html, body {
     animation: shakeBox 0.3s ease-in-out;
     border-color: #ff4d4d !important;
 }
+
+/* Fix for page23 slide transition */
+#page23 {
+    transition: opacity 1.5s ease-in-out, transform 1.5s cubic-bezier(.22, 1, .36, 1) !important;
+    will-change: opacity, transform;
+}
