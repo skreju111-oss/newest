@@ -81,7 +81,6 @@ const leftTap = document.getElementById("leftTap");
 const middleTap = document.getElementById("middleTap");
 const rightTap = document.getElementById("rightTap");
 
-// STARTS AT STAGE 0 AGAIN
 let stage = 0;
 let pulseTimer; 
 let writeTimer; 
@@ -703,6 +702,7 @@ const handleForwardTap = () => {
         stage = 49;
     }
     else if (stage === 49) {
+        page23.style.transition = "transform 1.5s cubic-bezier(.22, 1, .36, 1)";
         page23.style.transform = "translateX(-100%)"; 
         ani2.style.transform = "translateX(-100%)";   
         page24.style.transform = "translateX(0)";     
@@ -713,6 +713,7 @@ const handleForwardTap = () => {
         stage = 51;
     }
     else if (stage === 51) {
+        page24.style.transition = "transform 1.5s cubic-bezier(.22, 1, .36, 1)";
         page24.style.transform = "translateX(-100%)";
         ani1.style.transform = "translateX(-100%)";
         ani4.style.transform = "translateX(-100%)";
@@ -728,6 +729,7 @@ const handleForwardTap = () => {
         stage = 54;
     }
     else if (stage === 54) {
+        page25.style.transition = "transform 1.5s cubic-bezier(.22, 1, .36, 1)";
         page25.style.transform = "translateX(-100%)";
         angy1.style.transform = "translateX(-100%)";
         ani5.style.transform = "translateX(-100%)";
@@ -743,6 +745,7 @@ const handleForwardTap = () => {
         stage = 57;
     }
     else if (stage === 57) {
+        page26.style.transition = "transform 1.5s cubic-bezier(.22, 1, .36, 1)";
         page26.style.transform = "translateX(-100%)";
         angyWalker.style.transform = "translateX(-100%)";
         aniSequence.style.transform = "translateX(-100%)";
@@ -777,7 +780,6 @@ const handleForwardTap = () => {
 
 // NEXT (Right Tap)
 rightTap.addEventListener("click", () => {
-    // RESTORED STAGE 0 LOGIC
     if (stage === 0) {
         grid2.style.left = "0"; 
         stage = 1;
@@ -1069,12 +1071,12 @@ leftTap.addEventListener("click", () => {
         page2.classList.remove("show-page2"); 
         stage = 4;
     }
+    // REWIND FIX: INSTANT SNAP BACK TO STAGE 2
     else if (stage === 3 || stage === 4) {
         clearTimeout(writeTimer);
         clearTimeout(picPulseTimer);
         isWriting = false;
         
-        grid1.src = "assets/grid1.png"; 
         page1txt.classList.remove("writing", "written"); 
         page2.classList.remove("show-page2");
         page2pic.style.transform = "translateX(-100%)";
@@ -1172,13 +1174,18 @@ leftTap.addEventListener("click", () => {
         
         lastpage.classList.remove("show-lastpage");
 
+        // INSTANT REWIND: Make cover instantly opaque, remove transition briefly
+        cover.style.transition = "none"; 
         cover.style.opacity = "1"; 
         
+        // Hide grid1 so it doesn't bleed through
+        grid1.style.transition = "none";
+        grid1.style.opacity = "0";
+
         letter1.src = "assets/letter4.png"; 
         letterStep = 4;
         letter1.classList.add("pulsing"); 
         
-        // RESTORED STAGE 1 LOGIC
         stage = 2; 
     }
     else if (stage === 2) {
@@ -1195,14 +1202,13 @@ leftTap.addEventListener("click", () => {
             letterStep = 1;
         } 
         else if (letterStep === 1) {
-            letter1.style.left = "-100%"; // RESTORED left
+            letter1.style.left = "-100%"; 
             stage = 1; 
             clearTimeout(pulseTimer);
             letter1.classList.remove("pulsing");
         }
     } 
     else if (stage === 1) {
-        // RESTORED left
         grid2.style.left = "-75%"; 
         stage = 0;
     }
@@ -1226,8 +1232,23 @@ middleTap.addEventListener("click", () => {
             letterStep = 4;
         }
         else if (letterStep === 4) {
+            
+            // THE PERFECT CROSSFADE:
+            // 1. Swap grid1 to page1.png and set opacity to 0 instantly so it's ready.
+            grid1.style.transition = "none";
+            grid1.style.opacity = "0"; 
             grid1.src = "assets/page1.png"; 
-            cover.style.opacity = "0"; 
+            
+            // Allow 50ms for the browser to load the image src, then trigger the double-fade
+            setTimeout(() => {
+                // grid1 fades IN
+                grid1.style.transition = "opacity 1.5s ease";
+                grid1.style.opacity = "1"; 
+                
+                // Cover (grid2 + letter4) fades OUT exactly simultaneously
+                cover.style.transition = "opacity 1.5s ease";
+                cover.style.opacity = "0"; 
+            }, 50);
             
             clearTimeout(pulseTimer);
             letter1.classList.remove("pulsing");

@@ -42,6 +42,7 @@ html, body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 1; 
 }
 
 #page1txt {
@@ -235,14 +236,13 @@ html, body {
 #cover {
     position: absolute;
     inset: 0;
-    z-index: 6; 
+    z-index: 6; /* Always visible beneath page1 */
     overflow: hidden;
     pointer-events: none;
-    transition: opacity 1.5s ease; 
+    transition: opacity 1.5s ease;
     will-change: opacity;
 }
 
-/* RESTORED EXACTLY TO YOUR ORIGINAL CSS */
 #grid2 {
     position: absolute;
     top: 0;
@@ -252,7 +252,6 @@ html, body {
     transition: left 1.5s cubic-bezier(.22, 1, .36, 1); 
 }
 
-/* RESTORED EXACTLY TO YOUR ORIGINAL CSS */
 #letter1 {
     position: absolute;
     top: 0;
