@@ -87,9 +87,10 @@ html, body {
 /* FADING PAGES             */
 /* ------------------------ */
 
+/* Added lastpage to fading elements */
 #page3, #page4, #page5, #page6, #page7, #page8, #page9, #page10,
 #page11, #page12, #page13, #page14, #page15, #page16, #page17, #page18, #page19,
-#page20, #page21, #page22, #page23, #page26 {
+#page20, #page21, #page22, #page23, #page28, #hugend, #lastpage {
     position: absolute;
     top: 0;
     left: 0;
@@ -119,7 +120,7 @@ html, body {
 /* ------------------------ */
 
 #page4pic, #page11pic, #page12pic, #page13pic, #page14pic, #page15pic, #page16pic, #page17pic, #page18pic, #page19pic,
-#page20pic, #page21pic, #page22pic, #ani1, #ani2, #ani4, #angy1, #ani5 {
+#page20pic, #page21pic, #page22pic, #ani1, #ani2, #ani4, #angy1, #ani5, #ret-slide, #sorry {
     position: absolute;
     top: 0;
     left: -100%; 
@@ -131,8 +132,8 @@ html, body {
     transform-origin: center center;
 }
 
-/* Page 24 and Page 25 start off-screen RIGHT and slide left to 0 */
-#page24, #page25 {
+/* Pages start off-screen RIGHT and slide left to 0 */
+#page24, #page25, #page26, #page27 {
     position: absolute;
     top: 0;
     left: 100%; 
@@ -201,14 +202,25 @@ html, body {
 #ani5   { z-index: 55; }
 #page26 { z-index: 56; }
 #angy-walker { z-index: 57; }
+#ani-sequence { z-index: 58; } 
+#page27 { z-index: 59; }
+#ret-slide { z-index: 60; }
+#sorry { z-index: 61; }
+#ret-animation { z-index: 62; }
+#page28 { z-index: 63; }
+#hugend { z-index: 64; }
+
+/* NEW LAYER Z-INDEX */
+#lastpage { z-index: 65; }
 
 /* Asset States */
 .writing { opacity: 1 !important; }
 .written { opacity: 1 !important; transition: none !important; }
 
+/* Added .show-lastpage */
 .show-page2, .show-page3, .show-page4, .show-page5, .show-page6, .show-page7, .show-page8, .show-page9, .show-page10,
 .show-page11, .show-page12, .show-page13, .show-page14, .show-page15, .show-page16, .show-page17, .show-page18, .show-page19,
-.show-page20, .show-page21, .show-page22, .show-page23, .show-page26 { opacity: 1 !important; }
+.show-page20, .show-page21, .show-page22, .show-page23, .show-page28, .show-hugend, .show-lastpage { opacity: 1 !important; }
 
 /* ------------------------ */
 /* RED COVER & LETTER       */
@@ -302,11 +314,10 @@ html, body {
 /* STUTTER STOP MOTION      */
 /* ------------------------ */
 
-/* The wrapper slides exactly like ani1, page4pic, etc. */
 #angy-walker {
     position: absolute;
     top: 0;
-    left: -100%; /* Starts offscreen */
+    left: -100%;
     width: 100%;
     height: 100%;
     pointer-events: none;
@@ -314,7 +325,6 @@ html, body {
     z-index: 57;
 }
 
-/* The images maintain full size and cover */
 #angy-walker img {
     position: absolute;
     top: 0;
@@ -324,30 +334,127 @@ html, body {
     object-fit: cover;
 }
 
-/* 
-   Pattern Breakdown (0.6 seconds total to keep original fast speed):
-   0% to 25% (0 to 0.15s)   : angy4 is visible
-   25% to 50% (0.15 to 0.3s): angy6 is visible
-   50% to 100% (0.3 to 0.6s): angy4 is visible again (The Pause/Interval) 
-*/
-
 @keyframes stutterAngy4 {
-    0%, 24.9% { opacity: 1; }      /* Step 1 */
-    25%, 49.9% { opacity: 0; }     /* Hide for Step 2 */
-    50%, 100% { opacity: 1; }      /* Pause on this frame */
+    0%, 24.9% { opacity: 1; }      
+    25%, 49.9% { opacity: 0; }     
+    50%, 100% { opacity: 1; }      
 }
 
 @keyframes stutterAngy6 {
-    0%, 24.9% { opacity: 0; }      /* Hidden during Step 1 */
-    25%, 49.9% { opacity: 1; }     /* Step 2 */
-    50%, 100% { opacity: 0; }      /* Hidden during Pause */
+    0%, 24.9% { opacity: 0; }      
+    25%, 49.9% { opacity: 1; }     
+    50%, 100% { opacity: 0; }      
 }
 
-#angy4 {
-    /* 0.6s ensures the leg swapping is fast (0.15s per frame) */
-    animation: stutterAngy4 0.6s infinite;
+#angy4 { animation: stutterAngy4 0.3s infinite; }
+#angy6 { animation: stutterAngy6 0.3s infinite; }
+
+/* ------------------------ */
+/* 8-FRAME SEQUENCE ANIMATION */
+/* ------------------------ */
+
+#ani-sequence {
+    position: absolute;
+    top: 0;
+    left: -100%; 
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    z-index: 58; 
 }
 
-#angy6 {
-    animation: stutterAngy6 0.6s infinite;
+#ani-sequence img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0; 
 }
+
+@keyframes play8Frames {
+    0%, 12.49% { opacity: 1; }
+    12.5%, 100% { opacity: 0; }
+}
+
+#seq5  { animation: play8Frames 0.8s infinite 0.0s; }
+#seq6  { animation: play8Frames 0.8s infinite 0.1s; }
+#seq7  { animation: play8Frames 0.8s infinite 0.2s; }
+#seq8  { animation: play8Frames 0.8s infinite 0.3s; }
+#seq9  { animation: play8Frames 0.8s infinite 0.4s; }
+#seq10 { animation: play8Frames 0.8s infinite 0.5s; }
+#seq11 { animation: play8Frames 0.8s infinite 0.6s; }
+#seq12 { animation: play8Frames 0.8s infinite 0.7s; }
+
+/* ------------------------ */
+/* COMPLEX RET ANIMATION    */
+/* ------------------------ */
+
+#ret-animation {
+    position: absolute;
+    top: 0;
+    left: 0; 
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0; /* Hidden until activated */
+}
+
+#ret-animation img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0; 
+}
+
+#ret-animation.active {
+    opacity: 1;
+}
+
+@keyframes playRet1 { 
+    0%, 33.2% { opacity: 1; } 
+    33.3%, 100% { opacity: 0; } 
+}
+@keyframes playRet2 { 
+    0%, 33.2% { opacity: 0; } 
+    33.3%, 66.5% { opacity: 1; } 
+    66.6%, 100% { opacity: 0; } 
+}
+@keyframes playRet3 { 
+    0%, 66.5% { opacity: 0; } 
+    66.6%, 99.9% { opacity: 1; } 
+    100% { opacity: 0; } 
+}
+@keyframes loopRet4 { 
+    0%, 24.9% { opacity: 1; } 
+    25%, 100% { opacity: 0; } 
+}
+@keyframes loopRet5 { 
+    0%, 24.9% { opacity: 0; } 
+    25%, 49.9% { opacity: 1; } 
+    50%, 100% { opacity: 0; } 
+}
+@keyframes loopRet6 { 
+    0%, 49.9% { opacity: 0; } 
+    50%, 74.9% { opacity: 1; } 
+    75%, 100% { opacity: 0; } 
+}
+@keyframes loopRet7 { 
+    0%, 74.9% { opacity: 0; } 
+    75%, 99.9% { opacity: 1; } 
+    100% { opacity: 0; } 
+}
+
+#ret-animation.active #ret-seq1 { animation: playRet1 0.45s forwards; }
+#ret-animation.active #ret-seq2 { animation: playRet2 0.45s forwards; }
+#ret-animation.active #ret-seq3 { animation: playRet3 0.45s forwards; }
+
+#ret-animation.active #ret-seq4 { animation: loopRet4 0.6s infinite 0.45s; }
+#ret-animation.active #ret-seq5 { animation: loopRet5 0.6s infinite 0.45s; }
+#ret-animation.active #ret-seq6 { animation: loopRet6 0.6s infinite 0.45s; }
+#ret-animation.active #ret-seq7 { animation: loopRet7 0.6s infinite 0.45s; }

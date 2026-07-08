@@ -57,9 +57,23 @@ const page25 = document.getElementById("page25");
 const angy1 = document.getElementById("angy1");
 const ani5 = document.getElementById("ani5");
 
-// NEW Animations & Page 26
+// Animations & Page 26
 const page26 = document.getElementById("page26");
 const angyWalker = document.getElementById("angy-walker");
+const aniSequence = document.getElementById("ani-sequence");
+
+// Animations & Page 27
+const page27 = document.getElementById("page27");
+const retSlide = document.getElementById("ret-slide");
+const sorry = document.getElementById("sorry");
+const retAnimation = document.getElementById("ret-animation");
+
+// Animations & Page 28
+const page28 = document.getElementById("page28");
+const hugend = document.getElementById("hugend");
+
+// NEW: Last Page
+const lastpage = document.getElementById("lastpage");
 
 const grid2 = document.getElementById("grid2");
 const letter1 = document.getElementById("letter1");
@@ -95,13 +109,11 @@ function checkCdkCrossfade(e) {
         let fadeTimer = setInterval(() => {
             steps++;
             let progress = steps / 20; 
-            
             if (steps >= 20) {
                 clearInterval(fadeTimer);
                 activeCdk.pause();
                 activeCdk.volume = 0; 
                 inactiveCdk.volume = 1; 
-                
                 let temp = activeCdk;
                 activeCdk = inactiveCdk;
                 inactiveCdk = temp;
@@ -137,13 +149,11 @@ function checkIshareyCrossfade(e) {
         let fadeTimer = setInterval(() => {
             steps++;
             let progress = steps / 20; 
-            
             if (steps >= 20) {
                 clearInterval(fadeTimer);
                 activeIsharey.pause();
                 activeIsharey.volume = 0; 
                 inactiveIsharey.volume = 1; 
-                
                 let temp = activeIsharey;
                 activeIsharey = inactiveIsharey;
                 inactiveIsharey = temp;
@@ -158,6 +168,46 @@ function checkIshareyCrossfade(e) {
 isharey1.addEventListener('timeupdate', checkIshareyCrossfade);
 isharey2.addEventListener('timeupdate', checkIshareyCrossfade);
 
+// --- AUDIO 3: MAAFI (Pages 23 to End) ---
+const maafi1 = new Audio('assets/ani/maafi.mp3');
+const maafi2 = new Audio('assets/ani/maafi.mp3');
+let activeMaafi = maafi1;
+let inactiveMaafi = maafi2;
+let maafiCrossfadeTriggered = false;
+let isMaafiPlaying = false;
+let maafiFadeInTimer;
+
+function checkMaafiCrossfade(e) {
+    const audio = e.target;
+    if (audio.duration && audio.currentTime >= audio.duration - 1 && !maafiCrossfadeTriggered) {
+        maafiCrossfadeTriggered = true;
+        inactiveMaafi.currentTime = 0;
+        inactiveMaafi.volume = 0;
+        inactiveMaafi.play().catch(err => console.log(err));
+        
+        let steps = 0;
+        let fadeTimer = setInterval(() => {
+            steps++;
+            let progress = steps / 20; 
+            if (steps >= 20) {
+                clearInterval(fadeTimer);
+                activeMaafi.pause();
+                activeMaafi.volume = 0; 
+                inactiveMaafi.volume = 1; 
+                let temp = activeMaafi;
+                activeMaafi = inactiveMaafi;
+                inactiveMaafi = temp;
+                maafiCrossfadeTriggered = false; 
+            } else {
+                activeMaafi.volume = 1 - progress;
+                inactiveMaafi.volume = progress;
+            }
+        }, 50); 
+    }
+}
+maafi1.addEventListener('timeupdate', checkMaafiCrossfade);
+maafi2.addEventListener('timeupdate', checkMaafiCrossfade);
+
 // --- MASTER AUDIO CONTROLLER ---
 function updateMusic() {
     if (stage >= 3 && stage <= 19) {
@@ -167,6 +217,13 @@ function updateMusic() {
             inactiveIsharey.pause();
             isIshareyPlaying = false;
             ishareyCrossfadeTriggered = false;
+        }
+        if (isMaafiPlaying) {
+            clearInterval(maafiFadeInTimer);
+            activeMaafi.pause();
+            inactiveMaafi.pause();
+            isMaafiPlaying = false;
+            maafiCrossfadeTriggered = false;
         }
         if (!isCdkPlaying) {
             activeCdk.currentTime = 0;
@@ -196,6 +253,13 @@ function updateMusic() {
             isCdkPlaying = false;
             cdkCrossfadeTriggered = false;
         }
+        if (isMaafiPlaying) {
+            clearInterval(maafiFadeInTimer);
+            activeMaafi.pause();
+            inactiveMaafi.pause();
+            isMaafiPlaying = false;
+            maafiCrossfadeTriggered = false;
+        }
         if (!isIshareyPlaying) {
             activeIsharey.currentTime = 0;
             activeIsharey.volume = 0; 
@@ -216,6 +280,41 @@ function updateMusic() {
             }, 50);
         }
     } 
+    else if (stage >= 47) {
+        if (isCdkPlaying) {
+            clearInterval(cdkFadeInTimer);
+            activeCdk.pause();
+            inactiveCdk.pause();
+            isCdkPlaying = false;
+            cdkCrossfadeTriggered = false;
+        }
+        if (isIshareyPlaying) {
+            clearInterval(ishareyFadeInTimer);
+            activeIsharey.pause();
+            inactiveIsharey.pause();
+            isIshareyPlaying = false;
+            ishareyCrossfadeTriggered = false;
+        }
+        if (!isMaafiPlaying) {
+            activeMaafi.currentTime = 0;
+            activeMaafi.volume = 0; 
+            activeMaafi.play().catch(err => console.log("Tap needed to play audio", err));
+            isMaafiPlaying = true;
+
+            clearInterval(maafiFadeInTimer);
+            let steps = 0; 
+            maafiFadeInTimer = setInterval(() => {
+                steps++;
+                let progress = steps / 100; 
+                if (steps >= 100) {
+                    clearInterval(maafiFadeInTimer);
+                    activeMaafi.volume = 1;
+                } else {
+                    activeMaafi.volume = progress;
+                }
+            }, 50);
+        }
+    }
     else {
         if (isCdkPlaying) {
             clearInterval(cdkFadeInTimer);
@@ -231,11 +330,21 @@ function updateMusic() {
             isIshareyPlaying = false;
             ishareyCrossfadeTriggered = false;
         }
+        if (isMaafiPlaying) {
+            clearInterval(maafiFadeInTimer);
+            activeMaafi.pause();
+            inactiveMaafi.pause();
+            isMaafiPlaying = false;
+            maafiCrossfadeTriggered = false;
+        }
     }
 }
 // -------------------------------------
 
 const handleForwardTap = () => {
+    // Stop progression if we are on the very last stage
+    if (stage === 63) return;
+
     // PAGE 1 TO 4
     if (stage === 3 && isWriting) {
         clearTimeout(writeTimer);
@@ -697,15 +806,60 @@ const handleForwardTap = () => {
         ani5.style.left = "0";
         stage = 54;
     }
-    // PAGE 26 Fades in
+    // TRIGGER FLIP 3
     else if (stage === 54) {
-        page26.classList.add("show-page26");
+        page25.style.left = "-100%";
+        angy1.style.left = "-100%";
+        ani5.style.left = "-100%";
+        page26.style.left = "0";
         stage = 55;
     }
-    // NEW: Stop-motion animation slides in from the left to 0 (just like ani1)
+    // Angy Walker
     else if (stage === 55) {
         angyWalker.style.left = "0";
         stage = 56;
+    }
+    // 8-Frame Sequence
+    else if (stage === 56) {
+        aniSequence.style.left = "0";
+        stage = 57;
+    }
+    // TRIGGER FLIP 4
+    else if (stage === 57) {
+        page26.style.left = "-100%";
+        angyWalker.style.left = "-100%";
+        aniSequence.style.left = "-100%";
+        page27.style.left = "0";
+        stage = 58;
+    }
+    // ret1 slides in
+    else if (stage === 58) {
+        retSlide.style.left = "0";
+        stage = 59;
+    }
+    // sorry slides in
+    else if (stage === 59) {
+        sorry.style.left = "0";
+        stage = 60;
+    }
+    // Final Complex Animation Sequence
+    else if (stage === 60) {
+        retSlide.style.opacity = "0";
+        retAnimation.classList.remove("active");
+        void retAnimation.offsetWidth; 
+        retAnimation.classList.add("active");
+        stage = 61;
+    }
+    // Page 28 and Hugend Fade in
+    else if (stage === 61) {
+        page28.classList.add("show-page28");
+        hugend.classList.add("show-hugend");
+        stage = 62;
+    }
+    // NEW: Last Page fades in
+    else if (stage === 62) {
+        lastpage.classList.add("show-lastpage");
+        stage = 63;
     }
 };
 
@@ -735,14 +889,57 @@ rightTap.addEventListener("click", () => {
 // BACK / REWIND (Left Tap)
 leftTap.addEventListener("click", () => {
     
-    // REWIND: Stop-motion walker slides back off-screen left
-    if (stage === 56) {
+    // NEW REWIND: 63 -> 62 (Hide Last Page)
+    if (stage === 63) {
+        lastpage.classList.remove("show-lastpage");
+        stage = 62;
+    }
+    // REWIND: 62 -> 61 (Hide Page 28 and Hugend)
+    else if (stage === 62) {
+        page28.classList.remove("show-page28");
+        hugend.classList.remove("show-hugend");
+        stage = 61;
+    }
+    // REWIND: 61 -> 60 (Hide animation sequence, bring back static ret1)
+    else if (stage === 61) {
+        retAnimation.classList.remove("active");
+        retSlide.style.opacity = "1"; 
+        stage = 60;
+    }
+    // REWIND: sorry slides left
+    else if (stage === 60) {
+        sorry.style.left = "-100%";
+        stage = 59;
+    }
+    // REWIND: retSlide slides left
+    else if (stage === 59) {
+        retSlide.style.left = "-100%";
+        stage = 58;
+    }
+    // REWIND FLIP 4 
+    else if (stage === 58) {
+        page27.style.left = "100%";
+        page26.style.left = "0";
+        angyWalker.style.left = "0";
+        aniSequence.style.left = "0";
+        stage = 57;
+    }
+    // REWIND: 8-Frame Sequence
+    else if (stage === 57) {
+        aniSequence.style.left = "-100%";
+        stage = 56;
+    }
+    // REWIND: Stop-motion walker
+    else if (stage === 56) {
         angyWalker.style.left = "-100%";
         stage = 55;
     }
-    // REWIND: Page 26 fades out
+    // REWIND FLIP 3 
     else if (stage === 55) {
-        page26.classList.remove("show-page26");
+        page26.style.left = "100%";
+        page25.style.left = "0";
+        angy1.style.left = "0";
+        ani5.style.left = "0";
         stage = 54;
     }
     // REWIND ANI 5
@@ -755,7 +952,7 @@ leftTap.addEventListener("click", () => {
         angy1.style.left = "-100%";
         stage = 52;
     }
-    // REWIND FLIP 2 (Stage 52 back to 51)
+    // REWIND FLIP 2 
     else if (stage === 52) {
         page25.style.left = "100%"; 
         page24.style.left = "0";    
@@ -768,7 +965,7 @@ leftTap.addEventListener("click", () => {
         ani4.style.left = "-100%";
         stage = 50;
     }
-    // REWIND FLIP 1 (Stage 50 back to 49)
+    // REWIND FLIP 1 
     else if (stage === 50) {
         page24.style.left = "100%"; 
         page23.style.left = "0";    
@@ -1075,7 +1272,7 @@ leftTap.addEventListener("click", () => {
         page22pic.classList.remove("pulse-1s");
         page22pic.style.left = "-100%";
         
-        // Reset Ani & Page 24 & 25 & 26 pages
+        // Reset Ani & Page 24, 25 & 26 pages
         page23.classList.remove("show-page23");
         page23.style.left = "0"; 
         ani1.style.left = "-100%";
@@ -1087,8 +1284,21 @@ leftTap.addEventListener("click", () => {
         angy1.style.left = "-100%";
         ani5.style.left = "-100%";
 
-        page26.classList.remove("show-page26");
-        angyWalker.style.left = "-100%"; // Reset the walker div
+        page26.style.left = "100%"; 
+        angyWalker.style.left = "-100%"; 
+        aniSequence.style.left = "-100%";
+
+        // Reset NEW elements
+        page27.style.left = "100%"; 
+        retSlide.style.left = "-100%";
+        retSlide.style.opacity = "1"; 
+        sorry.style.left = "-100%";
+        retAnimation.classList.remove("active");
+
+        page28.classList.remove("show-page28");
+        hugend.classList.remove("show-hugend");
+        
+        lastpage.classList.remove("show-lastpage");
 
         cover.style.opacity = "1"; 
         
