@@ -1,3 +1,38 @@
+// --- NEW: LANDING PAGE LOGIC ---
+const landingPage = document.getElementById("landing-page");
+const nameInput = document.getElementById("secret-name");
+const submitBtn = document.getElementById("submit-name");
+const errorMsg = document.getElementById("error-msg");
+
+function checkPassword() {
+    // Converts input to lowercase and removes accidental spaces
+    const guess = nameInput.value.toLowerCase().trim();
+    
+    if (guess === "tharunya") {
+        // Correct! Fade out the screen
+        landingPage.style.opacity = "0";
+        // Remove it from the DOM after it fades so you can tap the letter behind it
+        setTimeout(() => {
+            landingPage.style.display = "none";
+        }, 1000); 
+    } else {
+        // Incorrect: Show error and shake input box
+        errorMsg.style.opacity = "1";
+        nameInput.classList.add("shake-input");
+        setTimeout(() => {
+            nameInput.classList.remove("shake-input");
+        }, 300);
+    }
+}
+
+submitBtn.addEventListener("click", checkPassword);
+nameInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        checkPassword();
+    }
+});
+// -------------------------------
+
 const cover = document.getElementById("cover"); 
 const grid1 = document.getElementById("grid1"); 
 const page1txt = document.getElementById("page1txt"); 
@@ -702,7 +737,6 @@ const handleForwardTap = () => {
         stage = 49;
     }
     else if (stage === 49) {
-        page23.style.transition = "transform 1.5s cubic-bezier(.22, 1, .36, 1)";
         page23.style.transform = "translateX(-100%)"; 
         ani2.style.transform = "translateX(-100%)";   
         page24.style.transform = "translateX(0)";     
@@ -713,7 +747,6 @@ const handleForwardTap = () => {
         stage = 51;
     }
     else if (stage === 51) {
-        page24.style.transition = "transform 1.5s cubic-bezier(.22, 1, .36, 1)";
         page24.style.transform = "translateX(-100%)";
         ani1.style.transform = "translateX(-100%)";
         ani4.style.transform = "translateX(-100%)";
@@ -729,7 +762,6 @@ const handleForwardTap = () => {
         stage = 54;
     }
     else if (stage === 54) {
-        page25.style.transition = "transform 1.5s cubic-bezier(.22, 1, .36, 1)";
         page25.style.transform = "translateX(-100%)";
         angy1.style.transform = "translateX(-100%)";
         ani5.style.transform = "translateX(-100%)";
@@ -745,7 +777,6 @@ const handleForwardTap = () => {
         stage = 57;
     }
     else if (stage === 57) {
-        page26.style.transition = "transform 1.5s cubic-bezier(.22, 1, .36, 1)";
         page26.style.transform = "translateX(-100%)";
         angyWalker.style.transform = "translateX(-100%)";
         aniSequence.style.transform = "translateX(-100%)";
@@ -1071,11 +1102,14 @@ leftTap.addEventListener("click", () => {
         page2.classList.remove("show-page2"); 
         stage = 4;
     }
-    // REWIND FIX: INSTANT SNAP BACK TO STAGE 2
     else if (stage === 3 || stage === 4) {
         clearTimeout(writeTimer);
         clearTimeout(picPulseTimer);
         isWriting = false;
+        
+        // Reset everything back to start
+        grid1.src = "assets/grid1.png";
+        grid1.style.opacity = "1";
         
         page1txt.classList.remove("writing", "written"); 
         page2.classList.remove("show-page2");
@@ -1174,14 +1208,10 @@ leftTap.addEventListener("click", () => {
         
         lastpage.classList.remove("show-lastpage");
 
-        // INSTANT REWIND: Make cover instantly opaque, remove transition briefly
-        cover.style.transition = "none"; 
+        // NEW: INSTANTLY RESTORE COVER
+        cover.style.transition = "none";
         cover.style.opacity = "1"; 
         
-        // Hide grid1 so it doesn't bleed through
-        grid1.style.transition = "none";
-        grid1.style.opacity = "0";
-
         letter1.src = "assets/letter4.png"; 
         letterStep = 4;
         letter1.classList.add("pulsing"); 
@@ -1233,22 +1263,10 @@ middleTap.addEventListener("click", () => {
         }
         else if (letterStep === 4) {
             
-            // THE PERFECT CROSSFADE:
-            // 1. Swap grid1 to page1.png and set opacity to 0 instantly so it's ready.
-            grid1.style.transition = "none";
-            grid1.style.opacity = "0"; 
+            // EXACT SAME LOGIC AS BEFORE: Swap to page 1, fade cover out
             grid1.src = "assets/page1.png"; 
-            
-            // Allow 50ms for the browser to load the image src, then trigger the double-fade
-            setTimeout(() => {
-                // grid1 fades IN
-                grid1.style.transition = "opacity 1.5s ease";
-                grid1.style.opacity = "1"; 
-                
-                // Cover (grid2 + letter4) fades OUT exactly simultaneously
-                cover.style.transition = "opacity 1.5s ease";
-                cover.style.opacity = "0"; 
-            }, 50);
+            cover.style.transition = "opacity 1.5s ease";
+            cover.style.opacity = "0"; 
             
             clearTimeout(pulseTimer);
             letter1.classList.remove("pulsing");

@@ -10,7 +10,7 @@
 
 <div id="app">
 
-    <!-- MOVED COVER TO THE TOP SO IT LOADS FIRST -->
+    <!-- ALL YOUR APP CONTENT STAYS INSIDE HERE EXACTLY AS IT IS -->
     <div id="cover">
         <img src="assets/grid2.png" id="grid2">
         <img src="assets/letter1.png" id="letter1">
@@ -120,13 +120,22 @@
         <img src="assets/ani/hugend.png" id="hugend">
         
         <img src="assets/ani/lastpage.png" id="lastpage">
-        
+
+        <div id="leftTap"></div>
+        <div id="middleTap"></div>
+        <div id="rightTap"></div>
+
+</div> <!-- THIS IS THE END OF THE APP DIV -->
+
+<!-- MOVED OUTSIDE THE APP CONTAINER -->
+<div id="landing-page">
+    <div class="login-container">
+        <p>What's your other name?</p>
+        <input type="text" id="secret-name" autocomplete="off">
+        <br>
+        <button id="submit-name">Enter</button>
+        <p id="error-msg">Incorrect...</p>
     </div>
-
-    <div id="leftTap"></div>
-    <div id="middleTap"></div>
-    <div id="rightTap"></div>
-
 </div>
 
 <script src="script.js"></script>
