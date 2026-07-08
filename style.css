@@ -55,6 +55,7 @@ html, body {
     pointer-events: none;
     opacity: 0;
     transition: opacity 2s ease-in-out; 
+    will-change: opacity;
 }
 
 #page2 {
@@ -68,26 +69,28 @@ html, body {
     pointer-events: none;
     opacity: 0;
     transition: opacity 1.5s ease-in-out; 
+    will-change: opacity;
 }
 
 #page2pic {
     position: absolute;
     top: 0;
-    left: -100%; 
+    left: 0; 
+    transform: translateX(-100%);
     width: 100%;
     height: 100%;
     object-fit: cover;
     z-index: 4; 
     pointer-events: none;
-    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    transition: transform 1.5s cubic-bezier(.22, 1, .36, 1);
     transform-origin: center center;
+    will-change: transform;
 }
 
 /* ------------------------ */
 /* FADING PAGES             */
 /* ------------------------ */
 
-/* Added lastpage to fading elements */
 #page3, #page4, #page5, #page6, #page7, #page8, #page9, #page10,
 #page11, #page12, #page13, #page14, #page15, #page16, #page17, #page18, #page19,
 #page20, #page21, #page22, #page23, #page28, #hugend, #lastpage {
@@ -99,7 +102,8 @@ html, body {
     object-fit: cover;
     pointer-events: none;
     opacity: 0;
-    transition: opacity 1.5s ease-in-out, left 1.5s cubic-bezier(.22, 1, .36, 1); 
+    transition: opacity 1.5s ease-in-out; 
+    will-change: opacity;
 }
 
 /* Txts only up to 10 */
@@ -113,6 +117,7 @@ html, body {
     pointer-events: none;
     opacity: 0;
     transition: opacity 2s ease-in-out; 
+    will-change: opacity;
 }
 
 /* ------------------------ */
@@ -123,26 +128,30 @@ html, body {
 #page20pic, #page21pic, #page22pic, #ani1, #ani2, #ani4, #angy1, #ani5, #ret-slide, #sorry {
     position: absolute;
     top: 0;
-    left: -100%; 
+    left: 0; 
+    transform: translateX(-100%);
     width: 100%;
     height: 100%;
     object-fit: cover;
     pointer-events: none;
-    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    transition: transform 1.5s cubic-bezier(.22, 1, .36, 1);
     transform-origin: center center;
+    will-change: transform;
 }
 
 /* Pages start off-screen RIGHT and slide left to 0 */
 #page24, #page25, #page26, #page27 {
     position: absolute;
     top: 0;
-    left: 100%; 
+    left: 0; 
+    transform: translateX(100%);
     width: 100%;
     height: 100%;
     object-fit: cover;
     pointer-events: none;
     opacity: 1; 
-    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    transition: transform 1.5s cubic-bezier(.22, 1, .36, 1);
+    will-change: transform;
 }
 
 /* ------------------------ */
@@ -209,15 +218,12 @@ html, body {
 #ret-animation { z-index: 62; }
 #page28 { z-index: 63; }
 #hugend { z-index: 64; }
-
-/* NEW LAYER Z-INDEX */
 #lastpage { z-index: 65; }
 
 /* Asset States */
 .writing { opacity: 1 !important; }
 .written { opacity: 1 !important; transition: none !important; }
 
-/* Added .show-lastpage */
 .show-page2, .show-page3, .show-page4, .show-page5, .show-page6, .show-page7, .show-page8, .show-page9, .show-page10,
 .show-page11, .show-page12, .show-page13, .show-page14, .show-page15, .show-page16, .show-page17, .show-page18, .show-page19,
 .show-page20, .show-page21, .show-page22, .show-page23, .show-page28, .show-hugend, .show-lastpage { opacity: 1 !important; }
@@ -233,24 +239,27 @@ html, body {
     overflow: hidden;
     pointer-events: none;
     transition: opacity 1.5s ease; 
+    will-change: opacity;
 }
 
+/* RESTORED EXACTLY TO YOUR ORIGINAL CSS */
 #grid2 {
     position: absolute;
     top: 0;
-    left: -75%;
+    left: -75%; 
     height: 100%;
     width: auto;
-    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    transition: left 1.5s cubic-bezier(.22, 1, .36, 1); 
 }
 
+/* RESTORED EXACTLY TO YOUR ORIGINAL CSS */
 #letter1 {
     position: absolute;
     top: 0;
-    left: -100%;
+    left: -100%; 
     height: 100%;
     width: auto;
-    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    transition: left 1.5s cubic-bezier(.22, 1, .36, 1); 
     z-index: 7; 
     transform-origin: center center; 
 }
@@ -317,12 +326,14 @@ html, body {
 #angy-walker {
     position: absolute;
     top: 0;
-    left: -100%;
+    left: 0;
+    transform: translateX(-100%);
     width: 100%;
     height: 100%;
     pointer-events: none;
-    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    transition: transform 1.5s cubic-bezier(.22, 1, .36, 1);
     z-index: 57;
+    will-change: transform;
 }
 
 #angy-walker img {
@@ -356,12 +367,14 @@ html, body {
 #ani-sequence {
     position: absolute;
     top: 0;
-    left: -100%; 
+    left: 0; 
+    transform: translateX(-100%);
     width: 100%;
     height: 100%;
     pointer-events: none;
-    transition: left 1.5s cubic-bezier(.22, 1, .36, 1);
+    transition: transform 1.5s cubic-bezier(.22, 1, .36, 1);
     z-index: 58; 
+    will-change: transform;
 }
 
 #ani-sequence img {
@@ -399,7 +412,7 @@ html, body {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    opacity: 0; /* Hidden until activated */
+    opacity: 0;
 }
 
 #ret-animation img {
